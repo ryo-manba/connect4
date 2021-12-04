@@ -7,9 +7,11 @@ template<class T> inline bool chmin(T& a, T b) { if (a > b) { a = b; return true
 
 #define PLAYER1 'o'
 #define PLAYER2 'x'
+#define ROW_LEN 7
+#define COL_LEN 6
 
 // 縦6横7
-string board[6] = {
+string board[COL_LEN] = {
 	"-------",
 	"-------",
 	"-------",
@@ -17,59 +19,52 @@ string board[6] = {
 	"-------",
 	"-------"};
 
+
 bool is_valid_input(string s)
 {
 	if (s.length() != 1) return false;
 	if (!('1' <= s[0] && s[0] <= '7')) return false;
 
-	int idx = s[0] - '0' - 1;
+	int idx = s[0] - '0'-1;
 
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < COL_LEN; i++)
 	{
 		if (board[i][idx] == '-') // コマが置ける
 		{
 			return true;
 		}
 	}
-
 	return false;
 }
 
 void print_board()
 {
 	cout << " 1234567" << endl;
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < COL_LEN; i++)
 	{
-		cout << i + 1;
+		cout << i+1;
 		cout << board[i] << endl;
 	}
 }
 
 bool is_valid_row()
 {
-	int cnt = 0;
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < COL_LEN; i++)
 	{
-		for (int j = 0; j < 7; j++)
+		int cnt = 0;
+		char before = '*';
+		for (int j = 0; j < ROW_LEN; j++)
 		{
-			if (board[i][j] == PLAYER1)
+			if (board[i][j] == PLAYER1 || board[i][j] == PLAYER2)
+				cnt += 1;
+			if (before != board[i][j])
 			{
-				if (cnt > 0 && board[i][j-1] == PLAYER1) // 一個前のコマが同じかどうか
-					cnt += 1;
-				else
-					cnt = 0;
+				if (board[i][j] == PLAYER1 || board[i][j] == PLAYER2)
+					cnt = 1;
+				else cnt = 0;
 			}
-			if (board[i][j] == PLAYER2)
-			{
-				if (cnt > 0 && board[i][j-1] == PLAYER2)
-					cnt += 1;
-				else
-					cnt = 0;
-			}
-			if (cnt == 4)
-			{
-				return true;
-			}
+			before = board[i][j];
+			if (cnt == 4) return true;
 		}
 	}
 	return false;
@@ -77,29 +72,22 @@ bool is_valid_row()
 
 bool is_valid_col()
 {
-	int cnt = 0;
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < ROW_LEN; i++)
 	{
-		for (int j = 0; j < 6; j++)
+		char before = '*';
+		int cnt = 0;
+		for (int j = 0; j < COL_LEN; j++)
 		{
-			if (board[j][i] == PLAYER1)
+			if (board[j][i] == PLAYER1 || board[j][i] == PLAYER2)
+				cnt += 1;
+			if (before != board[j][i])
 			{
-				if (cnt > 0 && board[j-1][i] == PLAYER1) // 一個前のコマが同じかどうか
-					cnt += 1;
-				else
-					cnt = 0;
+				if (board[j][i] == PLAYER1 || board[j][i] == PLAYER2)
+					cnt = 1;
+				else cnt = 0;
 			}
-			if (board[j][i] == PLAYER2)
-			{
-				if (cnt > 0 && board[j-1][i] == PLAYER2)
-					cnt += 1;
-				else
-					cnt = 0;
-			}
-			if (cnt == 4)
-			{
-				return true;
-			}
+			before = board[j][i];
+			if (cnt == 4) return true;
 		}
 	}
 	return false;
@@ -107,9 +95,9 @@ bool is_valid_col()
 
 bool is_game_set()
 {
-	int i = 0;
-	if (is_valid_row) return true;
-	if (is_valid_col) return true;
+	if (is_valid_row()) return true;
+	if (is_valid_col()) return true;
+
 //	if (is_check_naname) return true;
 	return false;
 }
@@ -141,12 +129,12 @@ void game_loop()
 		}
 		else
 			continue;
-		// if (is_game_set())
-		// {
-		// 	print_board();
-		// 	printf("Player%dの勝利です！\n", id);
-		// 	return 0;
-		// }
+		if (is_game_set())
+		{
+			print_board();
+			printf("Player%dの勝利です！\n", id);
+			return;
+		}
 		if (id == 1) id = 2;
 		else if (id == 2) id = 1;
 	}
