@@ -25,69 +25,106 @@ bool is_valid_input(string s)
 	if (s.length() != 1) return false;
 	if (!('1' <= s[0] && s[0] <= '7')) return false;
 
-	int idx = s[0] - '0'-1;
+	int idx = s[0] - '0' - 1;
 
 	for (int i = 0; i < COL_LEN; i++)
 	{
 		if (board[i][idx] == '-') // コマが置ける
-		{
 			return true;
-		}
 	}
 	return false;
 }
 
 void print_board()
 {
-	cout << " 1234567" << endl;
 	for (int i = 0; i < COL_LEN; i++)
 	{
-		cout << i+1;
 		cout << board[i] << endl;
 	}
+	cout << "1234567" << endl;
 }
 
-bool is_valid_row()
+bool is_win_row()
 {
-	for (int i = 0; i < COL_LEN; i++)
+	for (int y = 0; y < COL_LEN; y++)
 	{
 		int cnt = 0;
 		char before = '*';
-		for (int j = 0; j < ROW_LEN; j++)
+		for (int x = 0; x < ROW_LEN; x++)
 		{
-			if (board[i][j] == PLAYER1 || board[i][j] == PLAYER2)
+			if (board[y][x] == PLAYER1 || board[y][x] == PLAYER2)
 				cnt += 1;
-			if (before != board[i][j])
+			if (before != board[y][x])
 			{
-				if (board[i][j] == PLAYER1 || board[i][j] == PLAYER2)
+				if (board[y][x] == PLAYER1 || board[y][x] == PLAYER2)
 					cnt = 1;
 				else cnt = 0;
 			}
-			before = board[i][j];
+			before = board[y][x];
 			if (cnt == 4) return true;
 		}
 	}
 	return false;
 }
 
-bool is_valid_col()
+bool is_win_col()
 {
-	for (int i = 0; i < ROW_LEN; i++)
+	for (int x = 0; x < ROW_LEN; x++)
 	{
 		char before = '*';
 		int cnt = 0;
-		for (int j = 0; j < COL_LEN; j++)
+		for (int y = 0; y < COL_LEN; y++)
 		{
-			if (board[j][i] == PLAYER1 || board[j][i] == PLAYER2)
+			if (board[y][x] == PLAYER1 || board[y][x] == PLAYER2)
 				cnt += 1;
-			if (before != board[j][i])
+			if (before != board[y][x])
 			{
-				if (board[j][i] == PLAYER1 || board[j][i] == PLAYER2)
+				if (board[y][x] == PLAYER1 || board[y][x] == PLAYER2)
 					cnt = 1;
 				else cnt = 0;
 			}
-			before = board[j][i];
+			before = board[y][x];
 			if (cnt == 4) return true;
+		}
+	}
+	return false;
+}
+
+bool is_win_diagonally_4_pattern(int x, int y, int sign_x, int sign_y)
+{
+	int i = 1;
+	int cnt = 1;
+	char c = board[y][x];
+
+	while (true)
+	{
+		if (sign_y == -1 && y - i == -1)      break;
+		if (sign_x == -1 && x - i == -1)      break;
+		if (sign_y == +1 && y + i == COL_LEN) break;
+		if (sign_x == +1 && x + i == ROW_LEN) break;
+
+		if (board[y + (i * sign_y)][x + (i * sign_x)] != c)
+			break;
+		cnt += 1;
+		if (cnt == 4) return true;
+		i += 1;
+	}
+	return false;
+}
+
+bool is_win_diagonally()
+{
+	for (int y = 0; y < COL_LEN; y++)
+	{
+		for (int x = 0; x < ROW_LEN; x++)
+		{
+			if (board[y][x] == PLAYER1 || board[y][x] == PLAYER2)
+			{
+				if (is_win_diagonally_4_pattern(x, y, +1, +1)) return true; // [\]下
+				if (is_win_diagonally_4_pattern(x, y, +1, -1)) return true; // [/]上
+				if (is_win_diagonally_4_pattern(x, y, -1, +1)) return true; // [/]下
+				if (is_win_diagonally_4_pattern(x, y, -1, -1)) return true; // [\]上
+			}
 		}
 	}
 	return false;
@@ -95,40 +132,38 @@ bool is_valid_col()
 
 bool is_game_set()
 {
-	if (is_valid_row()) return true;
-	if (is_valid_col()) return true;
-
-//	if (is_check_naname) return true;
+	if (is_win_row())        return true;
+	if (is_win_col())        return true;
+	if (is_win_diagonally()) return true;
 	return false;
 }
 
 void game_loop()
 {
 	int id = 1;
+	int turn = 0;
+	const int max_turn = ROW_LEN * COL_LEN;
+	char c;
 
-	while (true)
+	while (turn < max_turn)
 	{
 		printf("Player%dの番です.\n", id);
 		print_board();
 		cout << "(1 ~ 7)を入力してください." << endl;
 		string s;
 		cin >> s;
-		if (is_valid_input(s))
+		if (!is_valid_input(s))
+			continue;
+		if (id % 2) c = PLAYER1;
+		else c = PLAYER2;
+		for (int i = 5; i >= 0; i--)
 		{
-			char c;
-			if (id % 2) c = PLAYER1;
-			else c = PLAYER2;
-			for (int i = 5; i >= 0; i--)
+			if (board[i][s[0]-'0'-1] == '-')
 			{
-				if (board[i][s[0]-'0'-1] == '-')
-				{
-					board[i][s[0]-'0'-1] = c;
-					break ;
-				}
+				board[i][s[0]-'0'-1] = c;
+				break ;
 			}
 		}
-		else
-			continue;
 		if (is_game_set())
 		{
 			print_board();
@@ -137,7 +172,10 @@ void game_loop()
 		}
 		if (id == 1) id = 2;
 		else if (id == 2) id = 1;
+		turn += 1;
 	}
+	print_board();
+	printf("引き分けです！\n");
 }
 
 int main()
