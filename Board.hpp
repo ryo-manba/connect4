@@ -9,14 +9,14 @@ public:
 	Board();
 	~Board();
 	void showBoard();
-	bool checkGame();
+	bool checkGame(char piece);
 	bool isValidInput(std::string inputNumber, char piece);
 
 private:
 	std::string _board[6];
-	bool isFourInARow();
-	bool isFourInACol();
-	bool isFourInaADiagonally();
+	bool isFourInARow(char piece);
+	bool isFourInACol(char piece);
+	bool isFourInaADiagonally(char piece);
 	bool isCheck4Pattern(int x, int y, int sign_x, int sign_y);
 };
 

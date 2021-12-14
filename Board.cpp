@@ -24,12 +24,17 @@ void Board::showBoard()
 {
 	for (int i = 0; i < COL_LEN; i++)
 	{
-		cout << _board[i] << endl;
+		for (int j = 0; j < ROW_LEN; j++)
+		{
+			cout << _board[i][j];
+			if (j == ROW_LEN - 1) cout << endl;
+			else cout << " ";
+		}
 	}
-	cout << "1234567" << endl;
+	cout << "1 2 3 4 5 6 7\n" << endl;
 }
 
-bool Board::isFourInARow()
+bool Board::isFourInARow(char piece)
 {
 	for (int y = 0; y < COL_LEN; y++)
 	{
@@ -37,11 +42,11 @@ bool Board::isFourInARow()
 		char before = '*';
 		for (int x = 0; x < ROW_LEN; x++)
 		{
-			if (this->_board[y][x] == PLAYER1 || this->_board[y][x] == PLAYER2)
+			if (this->_board[y][x] == piece)
 				cnt += 1;
 			if (before != this->_board[y][x])
 			{
-				if (this->_board[y][x] == PLAYER1 || this->_board[y][x] == PLAYER2)
+				if (this->_board[y][x] == piece)
 					cnt = 1;
 				else cnt = 0;
 			}
@@ -52,7 +57,7 @@ bool Board::isFourInARow()
 	return false;
 }
 
-bool Board::isFourInACol()
+bool Board::isFourInACol(char piece)
 {
 	for (int x = 0; x < ROW_LEN; x++)
 	{
@@ -60,11 +65,11 @@ bool Board::isFourInACol()
 		int cnt = 0;
 		for (int y = 0; y < COL_LEN; y++)
 		{
-			if (this->_board[y][x] == PLAYER1 || this->_board[y][x] == PLAYER2)
+			if (this->_board[y][x] == piece)
 				cnt += 1;
 			if (before != this->_board[y][x])
 			{
-				if (this->_board[y][x] == PLAYER1 || this->_board[y][x] == PLAYER2)
+				if (this->_board[y][x] == piece)
 					cnt = 1;
 				else cnt = 0;
 			}
@@ -79,7 +84,7 @@ bool Board::isCheck4Pattern(int x, int y, int sign_x, int sign_y)
 {
 	int i = 1;
 	int cnt = 1;
-	char c = this->_board[y][x];
+	char piece = this->_board[y][x];
 
 	while (true)
 	{
@@ -88,7 +93,7 @@ bool Board::isCheck4Pattern(int x, int y, int sign_x, int sign_y)
 		if (sign_y == +1 && y + i == COL_LEN) break;
 		if (sign_x == +1 && x + i == ROW_LEN) break;
 
-		if (this->_board[y + (i * sign_y)][x + (i * sign_x)] != c)
+		if (this->_board[y + (i * sign_y)][x + (i * sign_x)] != piece)
 			break;
 		cnt += 1;
 		if (cnt == 4) return true;
@@ -97,13 +102,13 @@ bool Board::isCheck4Pattern(int x, int y, int sign_x, int sign_y)
 	return false;
 }
 
-bool Board::isFourInaADiagonally()
+bool Board::isFourInaADiagonally(char piece)
 {
 	for (int y = 0; y < COL_LEN; y++)
 	{
 		for (int x = 0; x < ROW_LEN; x++)
 		{
-			if (this->_board[y][x] == PLAYER1 || this->_board[y][x] == PLAYER2)
+			if (this->_board[y][x] == piece)
 			{
 				if (isCheck4Pattern(x, y, +1, +1)) return true; // [\]下
 				if (isCheck4Pattern(x, y, +1, -1)) return true; // [/]上
@@ -115,11 +120,11 @@ bool Board::isFourInaADiagonally()
 	return false;
 }
 
-bool Board::checkGame()
+bool Board::checkGame(char piece)
 {
-	if (isFourInARow())         return true;
-	if (isFourInACol())         return true;
-	if (isFourInaADiagonally()) return true;
+	if (isFourInARow(piece))         return true;
+	if (isFourInACol(piece))         return true;
+	if (isFourInaADiagonally(piece)) return true;
 	return false;
 }
 
@@ -129,7 +134,7 @@ bool Board::isValidInput(std::string inputNumber, char piece)
 	if (!('1' <= inputNumber[0] && inputNumber[0] <= '7')) return false;
 
 	int idx = inputNumber[0] - '0' - 1;
-	for (int i = 0; i < COL_LEN; i++)
+	for (int i = COL_LEN; i >= 0; i--)
 	{
 		if (this->_board[i][idx] == '-') // コマが置ける
 		{

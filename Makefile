@@ -1,6 +1,6 @@
 NAME    := a.out
 CXX     := clang++
-CXXFLAGS:= -Wall -Wextra -Werror -std=c++17
+CXXFLAGS:= -Wall -Wextra -Werror -std=c++17 -g
 
 SRCS    := Game.cpp Board.cpp Player.cpp main.cpp
 OBJS    := $(SRCS:.cpp=.o)

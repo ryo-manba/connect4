@@ -1,10 +1,13 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <iostream>
-#include "Player.hpp"
 #include "Board.hpp"
+#include "Player.hpp"
 
+#define COL_LEN 6
+#define ROW_LEN 7
+#define PLAYER1 'O'
+#define PLAYER2 'X'
 class Game
 {
 public:
@@ -13,8 +16,8 @@ public:
 	void Start();
 
 private:
-	Board _board;
-	Player *_Players;
+	int _turn;
+//	Board _board;
 //	CPU	_cpu;
 	std::string _Mode;
 	bool _isCpuMode;

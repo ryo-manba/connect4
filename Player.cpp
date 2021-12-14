@@ -1,36 +1,34 @@
 #include "Player.hpp"
 #include "Board.hpp"
+
 Player::Player(int id, Board &board): _id(id), _board(board)
 {
-	if (_id == 1)
-	{
-		_piece = 'O';
-		std::cout << 1;
-	}
-	else
-	{
-		_piece = 'X';
-		std::cout << 2;
-	}
+	if (_id == 1) _piece = 'o';
+	else _piece = 'x';
 }
 
 Player::~Player() {}
 
 bool Player::SelectNumber()
 {
-	printf("Player%dの番です.\n", this->_id);
 	while (true)
 	{
-		std::cout << "(1 ~ 7)を入力してください." << std::endl;
-		std::cout << "> ";
+		this->_board.showBoard();
+		printf("TURN Player%d (%c)\n", this->_id, this->_piece);
+		std::cout << "(1 ~ 7)> ";
 		std::cin >> this->_inputNumber;
 		if (!this->_board.isValidInput(this->_inputNumber, this->_piece))
+		{
 			continue;
+		}
 		break ;
 	}
-	this->_board.showBoard();
-	if (this->_board.checkGame())
+	if (this->_board.checkGame(this->_piece))
+	{
+		this->_board.showBoard();
+		printf("Player%d WIN!\n", this->_id);
 		return true;
+	}
 	return false;
 }
 
