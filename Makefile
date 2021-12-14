@@ -2,7 +2,7 @@ NAME    := a.out
 CXX     := clang++
 CXXFLAGS:= -Wall -Wextra -Werror -std=c++17 -g
 
-SRCS    := Game.cpp Board.cpp Player.cpp main.cpp
+SRCS    := Game.cpp Board.cpp Player.cpp Cpu.cpp main.cpp
 OBJS    := $(SRCS:.cpp=.o)
 
 all     : $(NAME)

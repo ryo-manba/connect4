@@ -10,7 +10,8 @@ public:
 	~Board();
 	void showBoard();
 	bool checkGame(char piece);
-	bool isValidInput(std::string inputNumber, char piece);
+	bool isValidInput(std::string inputNumber);
+	void setPiece(int idx, char piece);
 
 private:
 	std::string _board[6];

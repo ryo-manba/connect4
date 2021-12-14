@@ -128,7 +128,7 @@ bool Board::checkGame(char piece)
 	return false;
 }
 
-bool Board::isValidInput(std::string inputNumber, char piece)
+bool Board::isValidInput(std::string inputNumber)
 {
 	if (inputNumber.length() != 1) return false;
 	if (!('1' <= inputNumber[0] && inputNumber[0] <= '7')) return false;
@@ -136,11 +136,22 @@ bool Board::isValidInput(std::string inputNumber, char piece)
 	int idx = inputNumber[0] - '0' - 1;
 	for (int i = COL_LEN; i >= 0; i--)
 	{
-		if (this->_board[i][idx] == '-') // コマが置ける
+		if (this->_board[i][idx] == '-')
 		{
-			this->_board[i][idx] = piece;
 			return true;
 		}
 	}
 	return false;
+}
+
+void Board::setPiece(int idx, char piece)
+{
+	for (int i = COL_LEN; i >= 0; i--)
+	{
+		if (this->_board[i][idx] == '-')
+		{
+			this->_board[i][idx] = piece;
+			break ;
+		}
+	}
 }

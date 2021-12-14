@@ -20,17 +20,14 @@ void Game::Start()
 	Board board;
 	Player player1(1, board);
 	Player player2(2, board);
+	Cpu cpu(2, board);
 
 	const int maxTurn = ROW_LEN * COL_LEN;
 	while (this->_turn < maxTurn)
 	{
-		if (player1.SelectNumber())
-		{
-			break ;
-		}
-		this->_turn++;
-		if (player2.SelectNumber())
-			break ;
-		this->_turn++;
+		if (player1.SelectNumber())	break;
+		if (this->_isCpuMode && cpu.SelectNumber()) break;
+		if (!this->_isCpuMode && player2.SelectNumber()) break ;
+		this->_turn+=2;
 	}
 }
