@@ -8,16 +8,15 @@ class Cpu
 public:
 	Cpu(int id, Board &board);
 	~Cpu();
-	bool SelectNumber();
+	bool selectNumber();
 
 private:
 	int _id;
 	char _piece;
 	Board &_board;
 	int	_random;
-	bool isValidInput(std::string inputNumber);
-	void setPiece(int idx, char piece);
+	bool isValidInput(std::string &inputNumber) const;
+	void setPiece(int &idx, char &piece);
 };
-
 
 #endif

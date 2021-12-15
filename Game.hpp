@@ -13,9 +13,10 @@ public:
 	void Start();
 
 private:
-	int _turn;
-	std::string _Mode;
-	bool _isCpuMode;
+	std::string _mode;
+	void PvE();
+	void PvP();
+	void selectMode();
 };
 
 #endif

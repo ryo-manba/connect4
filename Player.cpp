@@ -12,7 +12,7 @@ Player::Player(int id, Board &board): _id(id), _board(board)
 
 Player::~Player() {}
 
-bool Player::SelectNumber()
+bool Player::selectNumber()
 {
 	while (true)
 	{
@@ -26,12 +26,7 @@ bool Player::SelectNumber()
 			break ;
 		}
 	}
-	if (this->_board.checkGame(this->_piece))
-	{
-		this->_board.showBoard();
-		printf("Player%d WIN!!\n", this->_id);
-		return true;
-	}
+
 	return false;
 }
 

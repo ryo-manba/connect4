@@ -10,7 +10,7 @@ class Player
 public:
 	Player(int id, Board &board);
 	~Player();
-	bool SelectNumber();
+	bool selectNumber();
 
 private:
 	int	_id;
