@@ -13,9 +13,9 @@ public:
     bool checkGame(const char &piece) const;
     bool isValidInput(const std::string &inputNumber) const;
     void setPiece(const int &idx, const char &piece);
+    std::string _board[COL_LEN];
 
 private:
-    std::string _board[COL_LEN];
     bool isFourInARow(const char &piece) const;
     bool isFourInACol(const char &piece) const;
     bool isFourInaADiagonally(const char &piece) const;
