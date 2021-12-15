@@ -8,6 +8,11 @@ Game::Game(){ std::cout << ("Welcome to 4 in a row!") << std::endl; }
 
 Game::~Game() {}
 
+void Game::printResult(const char *color, const char *message) const
+{
+	printf("%s%s%s%s\n", BOLD, color, message, RESET);
+}
+
 void Game::PvE()
 {
 	Board board;
@@ -20,14 +25,14 @@ void Game::PvE()
 		if (board.checkGame(PIECE1))
 		{
 			board.showBoard();
-			printf("Player WIN!!\n");
+			printResult(GREEN, "YOU WIN");
 			return ;
 		}
 		cpu.selectNumber();
 		if (board.checkGame(PIECE2))
 		{
 			board.showBoard();
-			printf("CPU WIN!!\n");
+			printResult(RED, "YOU LOSE");
 			return ;
 		}
 	}
@@ -47,7 +52,9 @@ void Game::PvP()
 			if (board.checkGame(piece))
 			{
 				board.showBoard();
-				printf("Player%d WIN!!\n", j);
+				std::cout << BOLD << GREEN;
+				printf("Player%d WIN\n", j + 1);
+				std::cout << RESET;
 				return ;
 			}
 		}

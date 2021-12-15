@@ -8,7 +8,7 @@ class Cpu
 public:
 	Cpu(int id, Board &board);
 	~Cpu();
-	bool selectNumber();
+	void selectNumber();
 
 private:
 	int _id;

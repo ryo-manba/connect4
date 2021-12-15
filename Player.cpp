@@ -12,7 +12,7 @@ Player::Player(int id, Board &board): _id(id), _board(board)
 
 Player::~Player() {}
 
-bool Player::selectNumber()
+void Player::selectNumber()
 {
 	while (true)
 	{
@@ -26,7 +26,5 @@ bool Player::selectNumber()
 			break ;
 		}
 	}
-
-	return false;
 }
 

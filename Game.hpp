@@ -17,6 +17,7 @@ private:
 	void PvE();
 	void PvP();
 	void selectMode();
+	void printResult(const char *color, const char *message) const;
 };
 
 #endif
