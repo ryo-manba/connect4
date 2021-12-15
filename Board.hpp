@@ -2,23 +2,27 @@
 #define BOARD_HPP
 
 #include <iostream>
+#include "Const.hpp"
 
 class Board
 {
 public:
-	Board();
-	~Board();
-	void showBoard();
-	bool checkGame(char piece);
-	bool isValidInput(std::string inputNumber);
-	void setPiece(int idx, char piece);
+    Board();
+    ~Board();
+    void showBoard() const;
+    bool checkGame(const char &piece) const;
+    bool isValidInput(const std::string &inputNumber) const;
+    void setPiece(const int &idx, const char &piece);
 
 private:
-	std::string _board[6];
-	bool isFourInARow(char piece);
-	bool isFourInACol(char piece);
-	bool isFourInaADiagonally(char piece);
-	bool isCheck4Pattern(int x, int y, int sign_x, int sign_y);
+    std::string _board[COL_LEN];
+    bool isFourInARow(const char &piece) const;
+    bool isFourInACol(const char &piece) const;
+    bool isFourInaADiagonally(const char &piece) const;
+    bool isCheck4Pattern(const int &x,
+                         const int &y,
+                         const int &sign_x,
+                         const int &sign_y) const;
 };
 
 #endif

@@ -1,12 +1,13 @@
 #include "Player.hpp"
 #include "Board.hpp"
+#include "Const.hpp"
 
 #include <string>
 
 Player::Player(int id, Board &board): _id(id), _board(board)
 {
-	if (_id == 1) _piece = 'o';
-	else _piece = 'x';
+	if (_id == 1) _piece = PIECE1;
+	else _piece = PIECE2;
 }
 
 Player::~Player() {}

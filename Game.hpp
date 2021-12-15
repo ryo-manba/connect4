@@ -5,9 +5,6 @@
 #include "Player.hpp"
 #include "Cpu.hpp"
 
-#define COL_LEN 6
-#define ROW_LEN 7
-
 class Game
 {
 public:
