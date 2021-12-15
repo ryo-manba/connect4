@@ -25,17 +25,19 @@ void Game::PvE()
 		if (board.checkGame(PIECE1))
 		{
 			board.showBoard();
-			printResult(GREEN, "YOU WIN");
+			printResult(GREEN, "YOU WIN!");
 			return ;
 		}
 		cpu.selectNumber();
 		if (board.checkGame(PIECE2))
 		{
 			board.showBoard();
-			printResult(RED, "YOU LOSE");
+			printResult(RED, "YOU LOSE!");
 			return ;
 		}
 	}
+	board.showBoard();
+	printResult(YELLOW, "DRAW!");
 }
 
 void Game::PvP()
@@ -53,12 +55,14 @@ void Game::PvP()
 			{
 				board.showBoard();
 				std::cout << BOLD << GREEN;
-				printf("Player%d WIN\n", j + 1);
+				printf("Player%d WIN!\n", j + 1);
 				std::cout << RESET;
 				return ;
 			}
 		}
 	}
+	board.showBoard();
+	printResult(YELLOW, "DRAW!");
 }
 
 void Game::selectMode()

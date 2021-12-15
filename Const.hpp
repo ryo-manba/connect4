@@ -10,6 +10,7 @@
 #define RED "\033[31m"
 #define BLUE "\033[34m"
 #define GREEN "\033[32m"
+#define YELLOW "\x1b[33m"
 #define BOLD "\x1b[1m"
 #define RESET "\033[39m"
 
