@@ -112,6 +112,21 @@ bool Board::checkGame(const char &piece) const
     return false;
 }
 
+bool Board::isFull() const
+{
+    for (int y = 0; y < COL_LEN; y++)
+    {
+        for (int x = 0; x < ROW_LEN; x++)
+        {
+            if (this->_board[y][x] == '-') // 置ける場所があった時点でfalseを返す
+            {
+                return false;
+            }
+        }
+    }
+    return true; // 全てコマが置いてあったらtrue
+}
+
 void Board::showBoard() const
 {
     for (int i = 0; i < COL_LEN; i++)
@@ -132,7 +147,7 @@ bool Board::isValidInput(const std::string &inputNumber) const
     if (!('1' <= inputNumber[0] && inputNumber[0] <= '7')) return false;
 
     int idx = inputNumber[0] - '0' - 1;
-    for (int i = COL_LEN; i >= 0; i--)
+    for (int i = COL_LEN; i >= 0; i--) // コマが置けるかチェックする
     {
         if (this->_board[i][idx] == '-')
         {

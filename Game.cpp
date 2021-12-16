@@ -4,7 +4,7 @@
 #define PVE "1"
 #define PVP "2"
 
-Game::Game(){ std::cout << ("Welcome to 4 in a row!") << std::endl; }
+Game::Game(){ std::cout << ("Welcome to Connect 4!") << std::endl; }
 
 Game::~Game() {}
 
@@ -28,7 +28,7 @@ void Game::PvE()
 			printResult(GREEN, "YOU WIN!");
 			return ;
 		}
-		cpu.selectNumber();
+		cpu.selectNumber(-2);
 		if (board.checkGame(PIECE2))
 		{
 			board.showBoard();
@@ -70,7 +70,7 @@ void Game::selectMode()
 	while (true)
 	{
 		printf(""
-		"Please enter the mode :\n"
+		"Please select the mode :\n"
 		"  [1] 1P vs CPU\n"
 		"  [2] 1P vs 2P\n\n");
 		std::cout << " > ";

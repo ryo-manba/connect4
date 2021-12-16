@@ -1,5 +1,5 @@
-#ifndef Cpu_HPP
-#define Cpu_HPP
+#ifndef CPU_HPP
+#define CPU_HPP
 
 #include "Game.hpp"
 
@@ -8,7 +8,7 @@ class Cpu
 public:
 	Cpu(int id, Board &board);
 	~Cpu();
-	void selectNumber();
+	bool selectNumber(int idx);
 
 private:
 	int _id;
@@ -18,16 +18,8 @@ private:
 	int	_toWin;
 	bool isValidInput(std::string &inputNumber) const;
 	void setPiece(int &idx, char &piece);
-
-	bool toWinOrRand(const char &piece);
-	bool toWinInACol(const char &piece);
-	bool toWinInARow(const char &piece);
-	bool toWinInaADiagonally(const char &piece);
-	bool toWinCheck4Pattern(const int &x,
-                            const int &y,
-                            const int &sign_x,
-                            const int &sign_y);
-
 };
+
+void montecarlo(int idx, int depth, Board board);
 
 #endif

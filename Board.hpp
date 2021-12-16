@@ -13,6 +13,7 @@ public:
     bool checkGame(const char &piece) const;
     bool isValidInput(const std::string &inputNumber) const;
     void setPiece(const int &idx, const char &piece);
+    bool isFull() const;
     std::string _board[COL_LEN];
 
 private:

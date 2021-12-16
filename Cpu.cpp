@@ -14,250 +14,112 @@ Cpu::Cpu(int id, Board &board): _id(id), _board(board)
 
 Cpu::~Cpu() {}
 
-bool Cpu::toWinInARow(const char &piece)
+int score[7];
+
+// ランダムに複数回戦わせて最も勝利数が多かったものを選択する
+void montecarlo(int idx, int depth, Board board)
 {
-    for (int y = 0; y < COL_LEN; y++)
+    Board b = board;
+    Cpu cpu1(1, b);
+    Cpu cpu2(2, b);
+
+    if (depth >= 700)
     {
-        int cnt = 0;
-        char before = '*';
-        for (int x = 0; x < ROW_LEN; x++)
-        {
-            if (this->_board._board[y][x] == piece)
-                cnt += 1;
-            if (before != this->_board._board[y][x])
-            {
-                if (this->_board._board[y][x] == piece)
-                    cnt = 1;
-                else cnt = 0;
-            }
-            before = this->_board._board[y][x];
-            if (cnt == 3)
-            {
-                if (x + 1 < ROW_LEN && this->_board._board[y][x + 1] == '-') // 右隣が空いている
-                {
-                    if (y - 1 > 0 && this->_board._board[y - 1][x + 1] != '-') // コマが置ける
-                    {
-                        this->_toWin = x + 1;
-                        return true;
-                    }
-                }
-                if (x - 3 >= 0 && this->_board._board[y][x - 3] == '-') // 左隣が空いている
-                {
-                    if (y - 1 > 0 && this->_board._board[y - 1][x - 3] != '-') // コマが置ける
-                    {
-                        this->_toWin = x - 3;
-                        return true;
-                    }
-                }
-            }
-        }
+        return ;
     }
-    return false;
-}
 
-bool Cpu::toWinInACol(const char &piece)
-{
-    for (int x = 0; x < ROW_LEN; x++)
+    // 1番最初の手は決め打ち
+    if (cpu2.selectNumber(idx) == false) // もしコマが置けなかった場合
     {
-        char before = '*';
-        int cnt = 0;
-        for (int y = 0; y < COL_LEN; y++)
-        {
-            if (this->_board._board[y][x] == piece)
-                cnt += 1;
-            if (before != this->_board._board[y][x])
-            {
-                if (this->_board._board[y][x] == piece)
-                    cnt = 1;
-                else cnt = 0;
-            }
-            before = this->_board._board[y][x];
-            if (cnt == 3)
-            {
-                if (y + 1 < COL_LEN && this->_board._board[y + 1][x] == '-') // 上が空いている
-                {
-                    this->_toWin = x;
-                    return true;
-                }
-            }
-        }
+        depth += 100; // 100進めて次のidxに進む
+        if (depth >= 700) // 0~6までを100回ずつ試したら戻る
+            return ;
+        idx = depth / 100; // 0~99までは0, 100~199までは1,...,600~699までは6
+        montecarlo(idx, depth, board);
+        return;
     }
-    return false;
-}
-
-bool Cpu::toWinCheck4Pattern(const int &x,
-                               const int &y,
-                               const int &sign_x,
-                               const int &sign_y)
-{
-    int i = 1;
-    int cnt = 1;
-    char piece = this->_board._board[y][x];
-
+    // ランダムに勝敗がつくまで戦う
+    // (1〜7)を各100回ランダムに戦わせて、勝利数が最も多かったものを選択
     while (true)
     {
-        if (sign_y == -1 && y - i == -1)      break;
-        if (sign_x == -1 && x - i == -1)      break;
-        if (sign_y == +1 && y + i == COL_LEN) break;
-        if (sign_x == +1 && x + i == ROW_LEN) break;
-
-        if (this->_board._board[y + (i * sign_y)][x + (i * sign_x)] != piece)
-            break;
-        cnt += 1;
-        if (cnt == 3)
+        if (b.checkGame(PIECE2)) // CPUが勝利した場合
         {
-            if (sign_y == +1 && sign_x == +1) // [\]下
-            {
-                if (y + 4 < COL_LEN && x + 3 < ROW_LEN) // 下方向に進むから+4のチェック
-                {
-                    if (this->_board._board[y + 3][x + 3] == '-') // [\]下方向が空
-                    {
-                        if (this->_board._board[y + 4][x + 3] != '-') // [\]下方向に置ける
-                        {
-                            this->_toWin = x + 3;
-                            return true;
-                        }
-                    }
-                }
-                if (y - 1 >= 0 && x - 1 >= 0)
-                {
-                    if (this->_board._board[y - 1][x - 1] == '-') // [\]上方向が空
-                    {
-                        if (this->_board._board[y][x - 1] != '-') // [\]上方向に置ける
-                        {
-                            this->_toWin = x - 1;
-                            return true;
-                        }
-                    }
-                }
-            }
-            if (sign_y == -1 && sign_x == -1) // [\]上
-            {
-                if (y - 3 >= 0 && x - 3 >= 0)
-                {
-                    if (this->_board._board[y - 3][x - 3] == '-') // [\]上方向が空
-                    {
-                        if (this->_board._board[y - 2][x - 3] != '-') // [\]上方向に置ける
-                        {
-                            this->_toWin = x - 3;
-                            return true;
-                        }
-                    }
-                }
-                if (y + 2 < COL_LEN && x + 1 < ROW_LEN) // 右下に置くから+2のチェック
-                {
-                    if (this->_board._board[y + 1][x + 1] == '-') // [\]下方向が空
-                    {
-
-                        if (this->_board._board[y + 2][x + 1] != '-') // [\]下方向に置ける
-                        {
-                            this->_toWin = x - 1;
-                            return true;
-                        }
-                    }
-                }
-            }
-            if (sign_y == +1 && sign_x == -1) // [/]下
-            {
-                if (y + 4 < COL_LEN && x - 3 >= 0)
-                {
-                    if (this->_board._board[y + 3][x - 3] == '-') // [\]下方向が空
-                    {
-                        if (this->_board._board[y + 4][x - 3] != '-') // [\]下方向に置ける
-                        {
-                            this->_toWin = x - 3;
-                            return true;
-                        }
-                    }
-                }
-                if (y - 1 >= 0 && x + 1 < ROW_LEN)
-                {
-                    if (this->_board._board[y - 1][x + 1] == '-') // [/]上方向が空
-                    {
-                        if (this->_board._board[y][x + 1] != '-') // [/]上方向に置ける
-                        {
-                            this->_toWin = x + 1;
-                            return true;
-                        }
-                    }
-                }
-            }
-            if (sign_y == -1 && sign_x == +1) // [/]上
-            {
-                if (y - 3 >= 0 && x + 3 < ROW_LEN)
-                {
-                    if (this->_board._board[y - 3][x + 3] == '-') // [/]上方向が空
-                    {
-                        if (this->_board._board[y - 2][x + 3] != '-') // [/]上方向に置ける
-                        {
-                            this->_toWin = x + 3;
-                            return true;
-                        }
-                    }
-                }
-                if (y + 2 < ROW_LEN && x - 1 >= 0) // [/]下
-                {
-                    if (this->_board._board[y + 1][x - 1] == '-') // [/]上方向が空
-                    {
-                        if (this->_board._board[y + 2][x - 1] != '-') // [/]上方向に置ける
-                        {
-                            this->_toWin = x - 1;
-                            return true;
-                        }
-                    }
-                }
-            }
+            score[idx] += 1;
+            break ;
         }
-        i += 1;
-    }
-    return false;
-}
-
-bool Cpu::toWinInaADiagonally(const char &piece)
-{
-    for (int y = 0; y < COL_LEN; y++)
-    {
-        for (int x = 0; x < ROW_LEN; x++)
+        if (b.isFull()) break;
+        cpu1.selectNumber(-1);
+        if (b.checkGame(PIECE1) || b.isFull()) // Userが勝利した場合 or 引き分けの場合
         {
-            if (this->_board._board[y][x] == piece)
-            {
-                if (toWinCheck4Pattern(x, y, +1, +1)) return true; // [\]下
-                if (toWinCheck4Pattern(x, y, +1, -1)) return true; // [/]上
-                if (toWinCheck4Pattern(x, y, -1, +1)) return true; // [/]下
-                if (toWinCheck4Pattern(x, y, -1, -1)) return true; // [\]上
-            }
+            break ;
         }
+        cpu2.selectNumber(-1);
     }
-    return false;
+    depth += 1;
+    idx = depth / 100; // 0~99までは0, 100~199までは1,...,600~699までは6
+    montecarlo(idx, depth, board);
 }
 
-bool Cpu::toWinOrRand(const char &piece)
+bool Cpu::selectNumber(int idx)
 {
-    if (toWinInARow(piece))         return true;
-    if (toWinInACol(piece))         return true;
-    if (toWinInaADiagonally(piece)) return true;
-    return false;
-}
-
-void Cpu::selectNumber()
-{
-    while (true)
+    if (idx == -2)
     {
         this->_board.showBoard();
         printf("TURN CPU (%c)\n", this->_piece);
+    }
+    while (true)
+    {
 //        std::this_thread::sleep_for(std::chrono::milliseconds(TIME_TO_SLEEP));
-        if (toWinOrRand(this->_piece))
-            this->_random = this->_toWin;
-        else
+        std::random_device rnd;
+        this->_random = rnd() % 7;
+        if (idx >= 0) // もしidx指定があった場合はそれを選択する
         {
-            std::random_device rnd;
-            this->_random = rnd() % 7;
+            this->_random = idx;
+            if (!this->_board.isValidInput(std::to_string(this->_random + 1)))
+            {
+                return false;
+            }
+            else
+            {
+                this->_board.setPiece(this->_random, this->_piece);
+                return true;
+            }
         }
-        if (this->_board.isValidInput(std::to_string(this->_random + 1)))
+        else if (idx == -1) // モンテカルロ法内の処理
         {
-            this->_board.setPiece(this->_random, this->_piece);
-            break ;
+            if (this->_board.isValidInput(std::to_string(this->_random + 1)))
+            {
+                this->_board.setPiece(this->_random, this->_piece);
+                break ;
+            }
+        }
+        else if (idx == -2) // モンテカルロを使う場合
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                score[i] = 0;
+            }
+            montecarlo(0, 0, this->_board);
+            int maxScore = 0;
+            int maxIdx = 0;
+            for (int i = 0; i < 7; i++)
+            {
+                printf("score[%d] = %d\n", i,score[i]);
+                if (score[i] > maxScore) // 最大値を越した場合選択する
+                {
+                    maxIdx = i;
+                    maxScore = score[i];
+                }
+            }
+            if (maxScore != 0)
+            {
+                std::cout << maxIdx << std::endl;
+                this->_board.setPiece(maxIdx, this->_piece);
+                break ;
+            }
+            idx = -1;
         }
     }
+    return true;
 }
 

@@ -1,4 +1,4 @@
-NAME    := a.out
+NAME    := connect4
 CXX     := clang++
 CXXFLAGS:= -Wall -Wextra -Werror -std=c++17 -g
 
