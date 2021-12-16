@@ -3,6 +3,10 @@
 
 #include <iostream>
 
+#define DUMMY '*'
+#define EMPTY '-'
+#define MAX_CNT 4
+
 Board::Board()
 {
     this->_board[0]	= "-------";
@@ -15,13 +19,13 @@ Board::Board()
 
 Board::~Board() {}
 
-bool Board::isFourInARow(const char &piece) const
+bool Board::isCheckRow(const char &piece) const
 {
-    for (int y = 0; y < COL_LEN; y++)
+    for (int y = 0; y < COL_LEN; y += 1)
     {
         int cnt = 0;
-        char before = '*';
-        for (int x = 0; x < ROW_LEN; x++)
+        char before = DUMMY;
+        for (int x = 0; x < ROW_LEN; x += 1)
         {
             if (this->_board[y][x] == piece)
                 cnt += 1;
@@ -32,19 +36,19 @@ bool Board::isFourInARow(const char &piece) const
                 else cnt = 0;
             }
             before = this->_board[y][x];
-            if (cnt == 4) return true;
+            if (cnt == MAX_CNT) return true;
         }
     }
     return false;
 }
 
-bool Board::isFourInACol(const char &piece) const
+bool Board::isCheckCol(const char &piece) const
 {
-    for (int x = 0; x < ROW_LEN; x++)
+    for (int x = 0; x < ROW_LEN; x += 1)
     {
-        char before = '*';
+        char before = DUMMY;
         int cnt = 0;
-        for (int y = 0; y < COL_LEN; y++)
+        for (int y = 0; y < COL_LEN; y += 1)
         {
             if (this->_board[y][x] == piece)
                 cnt += 1;
@@ -55,12 +59,13 @@ bool Board::isFourInACol(const char &piece) const
                 else cnt = 0;
             }
             before = this->_board[y][x];
-            if (cnt == 4) return true;
+            if (cnt == MAX_CNT) return true;
         }
     }
     return false;
 }
 
+// 斜め右上,右下,左上,左下に進む4パターンをチェックする
 bool Board::isCheck4Pattern(const int &x,
                             const int &y,
                             const int &sign_x,
@@ -80,17 +85,17 @@ bool Board::isCheck4Pattern(const int &x,
         if (this->_board[y + (i * sign_y)][x + (i * sign_x)] != piece)
             break;
         cnt += 1;
-        if (cnt == 4) return true;
+        if (cnt == MAX_CNT) return true;
         i += 1;
     }
     return false;
 }
 
-bool Board::isFourInaADiagonally(const char &piece) const
+bool Board::isCheckDiagonal(const char &piece) const
 {
-    for (int y = 0; y < COL_LEN; y++)
+    for (int y = 0; y < COL_LEN; y += 1)
     {
-        for (int x = 0; x < ROW_LEN; x++)
+        for (int x = 0; x < ROW_LEN; x += 1)
         {
             if (this->_board[y][x] == piece)
             {
@@ -106,64 +111,64 @@ bool Board::isFourInaADiagonally(const char &piece) const
 
 bool Board::checkGame(const char &piece) const
 {
-    if (isFourInARow(piece))         return true;
-    if (isFourInACol(piece))         return true;
-    if (isFourInaADiagonally(piece)) return true;
+    if (isCheckRow(piece))      return true;
+    if (isCheckCol(piece))      return true;
+    if (isCheckDiagonal(piece)) return true;
     return false;
 }
 
 bool Board::isFull() const
 {
-    for (int y = 0; y < COL_LEN; y++)
+    for (int y = 0; y < COL_LEN; y += 1)
     {
-        for (int x = 0; x < ROW_LEN; x++)
+        for (int x = 0; x < ROW_LEN; x += 1)
         {
-            if (this->_board[y][x] == '-') // 置ける場所があった時点でfalseを返す
+            if (this->_board[y][x] == EMPTY)
             {
                 return false;
             }
         }
     }
-    return true; // 全てコマが置いてあったらtrue
+    return true;
 }
 
 void Board::showBoard() const
 {
-    for (int i = 0; i < COL_LEN; i++)
+    for (int y = 0; y < COL_LEN; y += 1)
     {
-        for (int j = 0; j < ROW_LEN; j++)
+        for (int x = 0; x < ROW_LEN; x += 1)
         {
-            std::cout << _board[i][j];
-            if (j == ROW_LEN - 1) std::cout << std::endl;
+            std::cout << _board[y][x];
+            if (x == ROW_LEN - 1) std::cout << std::endl;
             else std::cout << " ";
         }
     }
     std::cout << "1 2 3 4 5 6 7\n" << std::endl;
 }
 
+// 数字以外が入力された場合,
+// コマが置けなかった場合にfalseを返す
 bool Board::isValidInput(const std::string &inputNumber) const
 {
     if (inputNumber.length() != 1) return false;
     if (!('1' <= inputNumber[0] && inputNumber[0] <= '7')) return false;
 
     int idx = inputNumber[0] - '0' - 1;
-    for (int i = COL_LEN; i >= 0; i--) // コマが置けるかチェックする
+    for (int y = COL_LEN; y >= 0; y -= 1)
     {
-        if (this->_board[i][idx] == '-')
-        {
+        if (this->_board[y][idx] == EMPTY)
             return true;
-        }
     }
     return false;
 }
 
 void Board::setPiece(const int &idx, const char &piece)
 {
-    for (int i = COL_LEN; i >= 0; i--)
+    for (int y = COL_LEN; y >= 0; y -= 1)
     {
-        if (this->_board[i][idx] == '-')
+        if (this->_board[y][idx] == EMPTY)
         {
-            this->_board[i][idx] = piece;
+            this->_board[y][idx] = piece;
             break ;
         }
     }

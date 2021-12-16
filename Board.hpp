@@ -14,12 +14,12 @@ public:
     bool isValidInput(const std::string &inputNumber) const;
     void setPiece(const int &idx, const char &piece);
     bool isFull() const;
-    std::string _board[COL_LEN];
 
 private:
-    bool isFourInARow(const char &piece) const;
-    bool isFourInACol(const char &piece) const;
-    bool isFourInaADiagonally(const char &piece) const;
+    std::string _board[COL_LEN];
+    bool isCheckRow(const char &piece) const;
+    bool isCheckCol(const char &piece) const;
+    bool isCheckDiagonal(const char &piece) const;
     bool isCheck4Pattern(const int &x,
                          const int &y,
                          const int &sign_x,

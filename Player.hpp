@@ -19,7 +19,6 @@ private:
 	Board &_board;
 	std::string _inputNumber;
 	bool isValidInput();
-
 };
 
 #endif

@@ -28,7 +28,7 @@ void Game::PvE()
 			printResult(GREEN, "YOU WIN!");
 			return ;
 		}
-		cpu.selectNumber(-2);
+		cpu.selectNumber();
 		if (board.checkGame(PIECE2))
 		{
 			board.showBoard();
@@ -47,7 +47,7 @@ void Game::PvP()
 
 	for (int i = 0; i < MAX_TURN; i += 2)
 	{
-		for (int j = 0; j < 2; j++)
+		for (int j = 0; j < 2; j += 1)
 		{
 			players[j].selectNumber();
 			char piece = (j == 0) ? PIECE1 : PIECE2;
