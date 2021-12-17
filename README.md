@@ -14,16 +14,15 @@ cd dena-review && make
 ```
 
 ## How to play?
-1．モード選択をします。<br>
+1. モードを選択します。<br>
 
-![game screenshot](docs/mode_select.png)
+  ![game screenshot](docs/mode_select.png)
 
-2.行番号を選択しコマを配置していきます。<br>
+2. 行番号を選択しコマを配置していきます。<br>
 
-![game screenshot](docs/game_start.png)
+  ![game screenshot](docs/game_start.png)
 
-3.縦横斜めのどれかに、先に４つコマを並べた方の優勝です。
-
+3. 縦・横・斜めいずれかに、先に4コマ並べた方が優勝です。
 ## Features
 CPUのアルゴリズムでは[モンテカルロ法](https://ja.wikipedia.org/wiki/%E3%83%A2%E3%83%B3%E3%83%86%E3%82%AB%E3%83%AB%E3%83%AD%E6%B3%95)を利用しています。
 
@@ -41,7 +40,7 @@ CPUのアルゴリズムでは[モンテカルロ法](https://ja.wikipedia.org/w
 
 <br>
 
-`includes/Const.hpp`の
+また`includes/Const.hpp`の
 ```
 #define COL_LEN 6
 #define ROW_LEN 7
