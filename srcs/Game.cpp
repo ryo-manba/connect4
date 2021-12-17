@@ -2,13 +2,13 @@
 
 #include "Const.hpp"
 
-#define MODE_PVP "1"
-#define MODE_EASY "2"
+#define MODE_PVP    "1"
+#define MODE_EASY   "2"
 #define MODE_NORMAL "3"
-#define MODE_HARD "4"
-#define EASY 25
+#define MODE_HARD   "4"
+#define EASY   25
 #define NORMAL 100
-#define HARD 500
+#define HARD   500
 
 int g_sampleSize;
 int g_maxDepth;
