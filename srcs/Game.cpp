@@ -1,11 +1,13 @@
 #include "Game.hpp"
 #include "Const.hpp"
 
-#define PVP "1"
-#define PVE "4"
-#define EASY 25
+#define MODE_PVP    "1"
+#define MODE_EASY   "2"
+#define MODE_NORMAL "3"
+#define MODE_HARD   "4"
+#define EASY   25
 #define NORMAL 100
-#define HARD 500
+#define HARD   500
 
 int g_sampleSize;
 int	g_maxDepth;
@@ -85,8 +87,8 @@ void Game::selectMode()
 		"  [4] 1P vs CPU [hard]\n\n");
 		std::cout << " > ";
 		std::cin >> this->_mode;
-		if (this->_mode == "1" || this->_mode == "2" \
-		 || this->_mode == "3" || this->_mode == "4")
+		if (this->_mode == MODE_PVP    || this->_mode == MODE_EASY \
+		 || this->_mode == MODE_NORMAL || this->_mode == MODE_HARD)
 			break ;
 	}
 }
@@ -94,11 +96,8 @@ void Game::selectMode()
 void Game::Start()
 {
 	selectMode();
-	if (this->_mode == PVP) PvP();
-	else
-	{
-		if (this->_mode == "2") PvE(EASY);
-		if (this->_mode == "3") PvE(NORMAL);
-		if (this->_mode == "4") PvE(HARD);
-	}
+	if (this->_mode == MODE_PVP)    PvP();
+	if (this->_mode == MODE_EASY)   PvE(EASY);
+	if (this->_mode == MODE_NORMAL) PvE(NORMAL);
+	if (this->_mode == MODE_HARD)   PvE(HARD);
 }
