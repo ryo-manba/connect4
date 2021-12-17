@@ -8,6 +8,7 @@ Player::Player(int id, Board &board): _id(id), _board(board)
 {
 	if (_id == 1) _piece = PIECE1;
 	else _piece = PIECE2;
+	_selectRange = ("SELECT(1 ~ " + std::to_string(ROW_LEN) + ") > ");
 }
 
 Player::~Player() {}
@@ -18,7 +19,8 @@ void Player::selectNumber()
 	{
 		this->_board.showBoard();
 		printf("TURN Player%d (%c)\n", this->_id, this->_piece);
-		std::cout << "(1 ~ 7)> ";
+//		std::cout << "SELECT(1 ~ 7)> ";
+		std::cout << this->_selectRange;
 		std::cin >> this->_inputNumber;
 		if (this->_board.isValidInput(this->_inputNumber))
 		{

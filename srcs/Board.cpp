@@ -9,12 +9,17 @@
 
 Board::Board()
 {
-    this->_board[0]	= "-------";
-    this->_board[1]	= "-------";
-    this->_board[2]	= "-------";
-    this->_board[3]	= "-------";
-    this->_board[4]	= "-------";
-    this->_board[5]	= "-------";
+    std::string rowBoard = "";
+    for (int x = 0; x < ROW_LEN; x += 1)
+        rowBoard += EMPTY;
+    for (int y = 0; y < COL_LEN; y += 1)
+        this->_board[y] = rowBoard;
+    for (int x = 0; x < ROW_LEN; x += 1)
+    {
+        this->_rowIndex += std::to_string(x+1);
+        if (x != ROW_LEN - 1) this->_rowIndex += " ";
+    }
+    this->_maxNumber = std::to_string(ROW_LEN);
 }
 
 Board::~Board() {}
@@ -65,11 +70,10 @@ bool Board::isCheckCol(const char &piece) const
     return false;
 }
 
-// 斜め右上,右下,左上,左下に進む4パターンをチェックする
-bool Board::isCheck4Pattern(const int &x,
-                            const int &y,
-                            const int &sign_x,
-                            const int &sign_y) const
+bool Board::isCheck4Pattern(const int &y,
+                            const int &x,
+                            const int &sign_y,
+                            const int &sign_x) const
 {
     int i = 1;
     int cnt = 1;
@@ -99,10 +103,10 @@ bool Board::isCheckDiagonal(const char &piece) const
         {
             if (this->_board[y][x] == piece)
             {
-                if (isCheck4Pattern(x, y, +1, +1)) return true; // [\]下
-                if (isCheck4Pattern(x, y, +1, -1)) return true; // [/]上
-                if (isCheck4Pattern(x, y, -1, +1)) return true; // [/]下
-                if (isCheck4Pattern(x, y, -1, -1)) return true; // [\]上
+                if (isCheck4Pattern(y, x, +1, +1)) return true; // [\]下
+                if (isCheck4Pattern(y, x, -1, +1)) return true; // [/]上
+                if (isCheck4Pattern(y, x, +1, -1)) return true; // [/]下
+                if (isCheck4Pattern(y, x, -1, -1)) return true; // [\]上
             }
         }
     }
@@ -143,17 +147,16 @@ void Board::showBoard() const
             else std::cout << " ";
         }
     }
-    std::cout << "1 2 3 4 5 6 7\n" << std::endl;
+    std::cout << this->_rowIndex << std::endl;
 }
 
 // 数字以外が入力された場合,
 // コマが置けなかった場合にfalseを返す
 bool Board::isValidInput(const std::string &inputNumber) const
 {
-    if (inputNumber.length() != 1) return false;
-    if (!('1' <= inputNumber[0] && inputNumber[0] <= '7')) return false;
-
-    int idx = inputNumber[0] - '0' - 1;
+    if (!("1" <= inputNumber || inputNumber <= this->_maxNumber))
+        return false;
+    int idx = std::stoi(inputNumber) - 1;
     for (int y = COL_LEN; y >= 0; y -= 1)
     {
         if (this->_board[y][idx] == EMPTY)

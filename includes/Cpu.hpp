@@ -27,5 +27,4 @@ private:
 	bool isValidInput(std::string &inputNumber) const;
 };
 
-
 #endif

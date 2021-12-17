@@ -1,9 +1,8 @@
 #include "Cpu.hpp"
-
 #include <random>
 
-#define SAMPLE_SIZE 100
-#define MAX_DEPTH (SAMPLE_SIZE * 7)
+extern int g_sampleSize;
+extern int g_maxDepth;
 
 int Cpu::score[ROW_LEN] = {};
 
@@ -20,28 +19,26 @@ void Cpu::playOut(const Board &board, int &depth)
     Board copyBoard = board;
     Cpu userCpu(1, copyBoard);
     Cpu cpu(2, copyBoard);
-    int idx = depth / SAMPLE_SIZE;
+    int idx = depth / g_sampleSize;
 
-    // 1番最初の手は決め打ちする
-    if (cpu.selectIdx(idx) == false)
+    if (cpu.selectIdx(idx) == false) // 最初の手は決め打ちする
     {
-        depth += SAMPLE_SIZE;
-        if (depth >= MAX_DEPTH)
+        depth += g_sampleSize;
+        if (depth >= g_maxDepth)
             return
         playOut(board, depth);
         return;
     }
     while (true)
     {
-        if (copyBoard.checkGame(PIECE2)) // CPUが勝利した場合スコアを増やす
+        if (copyBoard.checkGame(PIECE2))
         {
-            score[idx] += 1;
+            score[idx] += 1; // CPUが勝利した場合scoreを増やす
             break ;
         }
-        if (copyBoard.isFull()) break; // 引き分けだった場合
-
+        if (copyBoard.isFull()) break;
         userCpu.selectRandom();
-        if (copyBoard.checkGame(PIECE1) || copyBoard.isFull()) // Userが勝利した場合
+        if (copyBoard.checkGame(PIECE1) || copyBoard.isFull())
         {
             break ;
         }
@@ -52,10 +49,10 @@ void Cpu::playOut(const Board &board, int &depth)
 // ランダムに複数回戦わせて最も勝利数が多かったものを選択する
 void Cpu::montecarlo(const Board &board, int depth)
 {
-    if (depth >= MAX_DEPTH)
+    if (depth >= g_maxDepth)
         return ;
-    playOut(board, depth); // ランダムに戦わせる
-    montecarlo(board, depth + 1); // depthが0~99までは0, 100~199までは1,...,600~699までは6
+    playOut(board, depth);
+    montecarlo(board, depth + 1);
 }
 
 bool Cpu::selectIdx(int idx)
@@ -73,7 +70,7 @@ void Cpu::selectRandom()
     while (true)
     {
         std::random_device rnd;
-        this->_idx = rnd() % 7;
+        this->_idx = rnd() % ROW_LEN;
         if (this->_board.isValidInput(std::to_string(this->_idx + 1)))
         {
             this->_board.setPiece(this->_idx, this->_piece);
@@ -86,7 +83,7 @@ void Cpu::selectNumber()
 {
     this->_board.showBoard();
     printf("TURN CPU (%c)\n", this->_piece);
-    for (int i = 0; i < 7; i += 1)
+    for (int i = 0; i < ROW_LEN; i += 1)
     {
         score[i] = 0;
     }
@@ -94,9 +91,8 @@ void Cpu::selectNumber()
 
     this->_maxScore = 0;
     this->_maxIdx = 0;
-    for (int i = 0; i < 7; i += 1)
+    for (int i = 0; i < ROW_LEN; i += 1)
     {
-//        printf("score[%d] = %d\n", i,score[i]);
         if (score[i] > this->_maxScore) // 最大スコアの手を選択する
         {
             this->_maxIdx = i;

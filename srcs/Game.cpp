@@ -1,8 +1,14 @@
 #include "Game.hpp"
 #include "Const.hpp"
 
-#define PVE "1"
-#define PVP "2"
+#define PVP "1"
+#define PVE "4"
+#define EASY 25
+#define NORMAL 100
+#define HARD 500
+
+int g_sampleSize;
+int	g_maxDepth;
 
 Game::Game(){ std::cout << ("Welcome to Connect 4!") << std::endl; }
 
@@ -13,8 +19,10 @@ void Game::printResult(const char *color, const char *message) const
 	printf("%s%s%s%s\n", BOLD, color, message, RESET);
 }
 
-void Game::PvE()
+void Game::PvE(const int &mode)
 {
+	g_sampleSize = mode;
+	g_maxDepth = mode * ROW_LEN;
 	Board board;
 	Player player(1, board);
 	Cpu cpu(2, board);
@@ -71,11 +79,13 @@ void Game::selectMode()
 	{
 		printf(""
 		"Please select the mode :\n"
-		"  [1] 1P vs CPU\n"
-		"  [2] 1P vs 2P\n\n");
+		"  [1] 1P vs 2P\n"
+		"  [2] 1P vs CPU [easy]\n"
+		"  [3] 1P vs CPU [normal]\n"
+		"  [4] 1P vs CPU [hard]\n\n");
 		std::cout << " > ";
 		std::cin >> this->_mode;
-		if (this->_mode == PVP || this->_mode == PVE)
+		if (PVP <= this->_mode && this->_mode <= PVE)
 			break ;
 	}
 }
@@ -83,6 +93,11 @@ void Game::selectMode()
 void Game::Start()
 {
 	selectMode();
-	if (this->_mode == PVE) PvE();
 	if (this->_mode == PVP) PvP();
+	else
+	{
+		if (this->_mode == "2") PvE(EASY);
+		if (this->_mode == "3") PvE(NORMAL);
+		if (this->_mode == "4") PvE(HARD);
+	}
 }

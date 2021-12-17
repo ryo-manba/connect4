@@ -14,7 +14,7 @@ public:
 
 private:
 	std::string _mode;
-	void PvE();
+	void PvE(const int &mode);
 	void PvP();
 	void selectMode();
 	void printResult(const char *color, const char *message) const;

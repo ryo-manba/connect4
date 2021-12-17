@@ -17,13 +17,15 @@ public:
 
 private:
     std::string _board[COL_LEN];
+    std::string _rowIndex;
+    std::string _maxNumber;
     bool isCheckRow(const char &piece) const;
     bool isCheckCol(const char &piece) const;
     bool isCheckDiagonal(const char &piece) const;
-    bool isCheck4Pattern(const int &x,
-                         const int &y,
-                         const int &sign_x,
-                         const int &sign_y) const;
+    bool isCheck4Pattern(const int &y,
+                         const int &x,
+                         const int &sign_y,
+                         const int &sign_x) const;
 };
 
 #endif

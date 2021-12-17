@@ -17,6 +17,7 @@ private:
 	int	_idx;
 	char _piece;
 	Board &_board;
+	std::string _selectRange;
 	std::string _inputNumber;
 	bool isValidInput();
 };
