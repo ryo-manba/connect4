@@ -85,7 +85,7 @@ void Cpu::selectRandom()
 void Cpu::selectNumber()
 {
     this->_board.showBoard();
-    printf("TURN CPU f(%c)\n", this->_piece);
+    printf("TURN CPU (%c)\n", this->_piece);
     for (int i = 0; i < 7; i += 1)
     {
         score[i] = 0;
@@ -96,7 +96,7 @@ void Cpu::selectNumber()
     this->_maxIdx = 0;
     for (int i = 0; i < 7; i += 1)
     {
-        printf("score[%d] = %d\n", i,score[i]);
+//        printf("score[%d] = %d\n", i,score[i]);
         if (score[i] > this->_maxScore) // 最大スコアの手を選択する
         {
             this->_maxIdx = i;

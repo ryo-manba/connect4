@@ -1,11 +1,24 @@
-NAME    := connect4
-CXX     := clang++
-CXXFLAGS:= -Wall -Wextra -Werror -std=c++17 -g
+NAME     = connect4
+CXX      = clang++
+CXXFLAGS = -Wall -Wextra -Werror -std=c++17 -g -O0 $(INC)
 
-SRCS    := Game.cpp Board.cpp Player.cpp Cpu.cpp main.cpp
-OBJS    := $(SRCS:.cpp=.o)
+SRCDIR  = ./srcs/
+INCDIR  = ./includes
+OBJDIR  = ./objs/
 
-all     : $(NAME)
+SRCNAME   = Game.cpp Board.cpp Player.cpp Cpu.cpp main.cpp
+SRCS	= $(addprefix $(SRCDIR), $(SRCNAME))
+OBJS	= $(addprefix $(OBJDIR), $(notdir $(SRCS:.cpp=.o)))
+INC		= -I $(INCDIR)
+RM		= rm -rf
+
+all: $(OBJDIR) $(NAME)
+
+$(OBJDIR):
+	mkdir -p objs
+
+$(OBJDIR)%.o: $(SRCDIR)%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(NAME) : $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
@@ -15,15 +28,12 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
+	$(RM) $(OBJDIR)
 
 re: fclean all
 
 test: $(NAME)
 	./$(NAME)
-
-.PHONY: debug
-debug: CXXFLAGS += -pedantic -g -fsanitize=address
-debug: re
 
 .PHONY  : all clean fclean re debug
 .PHONY: test
