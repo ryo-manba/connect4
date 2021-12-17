@@ -2,22 +2,22 @@
 #define GAME_HPP
 
 #include "Board.hpp"
-#include "Player.hpp"
 #include "Cpu.hpp"
+#include "Player.hpp"
 
 class Game
 {
 public:
-	Game();
-	~Game();
-	void Start();
+    Game();
+    ~Game();
+    void Start();
 
 private:
-	std::string _mode;
-	void PvE(const int &mode);
-	void PvP();
-	void selectMode();
-	void printResult(const char *color, const char *message) const;
+    std::string _mode;
+    void PvE(const int &mode);
+    void PvP();
+    void selectMode();
+    void printResult(const char *color, const char *message) const;
 };
 
 #endif
