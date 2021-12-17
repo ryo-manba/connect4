@@ -85,7 +85,8 @@ void Game::selectMode()
 		"  [4] 1P vs CPU [hard]\n\n");
 		std::cout << " > ";
 		std::cin >> this->_mode;
-		if (PVP <= this->_mode && this->_mode <= PVE)
+		if (this->_mode == "1" || this->_mode == "2" \
+		 || this->_mode == "3" || this->_mode == "4")
 			break ;
 	}
 }

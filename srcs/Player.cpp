@@ -19,7 +19,6 @@ void Player::selectNumber()
 	{
 		this->_board.showBoard();
 		printf("TURN Player%d (%c)\n", this->_id, this->_piece);
-//		std::cout << "SELECT(1 ~ 7)> ";
 		std::cout << this->_selectRange;
 		std::cin >> this->_inputNumber;
 		if (this->_board.isValidInput(this->_inputNumber))

@@ -156,7 +156,20 @@ bool Board::isValidInput(const std::string &inputNumber) const
 {
     if (!("1" <= inputNumber || inputNumber <= this->_maxNumber))
         return false;
-    int idx = std::stoi(inputNumber) - 1;
+    int idx;
+    try
+    {
+        idx = std::stoi(inputNumber) - 1;
+    }
+    catch (std::invalid_argument &e)
+    {
+        return false;
+    }
+    catch (std::out_of_range &e)
+    {
+        return false;
+    }
+
     for (int y = COL_LEN; y >= 0; y -= 1)
     {
         if (this->_board[y][idx] == EMPTY)
