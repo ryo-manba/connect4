@@ -8,8 +8,8 @@
 ## Usage
 
 ```
-git clone https://github.com/ryo-manba/dena-review
-cd dena-review && make
+git clone https://github.com/ryo-manba/connect4
+cd connect4 && make
 ./connect4
 ```
 
